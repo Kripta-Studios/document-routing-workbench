@@ -11,6 +11,18 @@ tool. It does not certify invoice compliance, perform payments, or prove what an
 stores beyond the inspected export. [PRODUCT.md](PRODUCT.md) describes the intended
 users and later pilot gates; [RESULTS.md](docs/RESULTS.md) contains actual evidence.
 
+## Demo
+
+[▶ Watch the 39-second SourceCheck demo](docs/media/sourcecheck-demo.mp4)
+
+[![SourceCheck demo video poster](docs/media/sourcecheck-demo-poster.png)](docs/media/sourcecheck-demo.mp4)
+
+The captioned, silent recording uses the owned invoice fixture. It shows a real
+Mustang import, source-to-destination evidence, a review decision, a saved
+reference and a verifiable export. The second comparison uses a **constructed
+uploaded export** to demonstrate a missing value under explicit complete coverage;
+it is not presented as Mustang behavior.
+
 ## Quick start
 
 The tested Windows setup used Python 3.12.13 via `uv`, Java 25 with Java 21 bytecode,

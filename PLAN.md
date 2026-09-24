@@ -277,6 +277,7 @@ Follow docs/DATASETS.md and docs/EVALUATION.md.
       commands; native Linux/macOS desktop runs remain unverified.
 - [x] Add and verify app container setup; distinguish it from the optional ERP environment.
 - [x] Replace proposed commands with tested Windows instructions and record evidence.
+- [x] Publish a sub-minute owned-fixture demo with the simulated upload labeled.
 - [x] Update docs/RESULTS.md, review the diff, commit and push.
 
 ### Phase 5: optional ERP and customer pilot

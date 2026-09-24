@@ -77,6 +77,20 @@ conflicts rather than destination losses.
 
 ## Browser and persistence verification
 
+The [39.44-second demo video](media/sourcecheck-demo.mp4) was recorded with
+`python scripts/record_demo.py` against a fresh isolated runtime using the owned
+XML fixture, actual Mustang 2.26.0 import, and a separately labeled constructed
+JSON export missing the buyer order. The recorder excluded Jev credentials from
+the demo server. It reported zero browser JavaScript errors. The downloaded demo
+report verified offline (`python -m sourcecheck verify-export
+.runtime/demo-recordings/20260924-190942/demo-report.zip`). `ffmpeg` converted the
+raw browser capture to 1440×810 H.264 MP4 at 25 fps; `ffprobe` measured 39.44 s
+and 5,735,485 bytes. The MP4 SHA-256 is
+`8a4710e3f3f1916bb6feb34ab7ac78564a096524b29eadc05c7a5150b43f39b2`.
+Full-file decode completed without errors. The poster comes from the opening
+title frame. Raw capture and report remain outside Git; only the owned-fixture
+video and poster are published.
+
 The browser check used installed Chrome via Playwright against the live local
 server. It created an owned case, ran both real Mustang versions, selected source
 and destination evidence, recorded a review, saved a reference, uploaded JSON with
