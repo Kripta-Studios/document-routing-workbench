@@ -87,8 +87,11 @@ is reported in the scope of this inspected bridge, not generalized to ERP behavi
 Jev 1.13.0 can optionally suggest a relation for a bounded text pair after explicit
 selection. Its request preview shows the text sent to TypeSafe. A server-side
 `TYPESAFE_API_KEY` is required; a configured key does not trigger calls by itself.
-No live Jev evaluation was possible in this implementation environment. A timeout
-keeps an unknown-delivery reservation and is not silently retried. See
+Four constructed development pairs were tested live and matched their authored
+labels; this does not establish performance on real invoices. Use `--key-stdin`
+with `serve` or `evaluate --live-jev` to enter the key through a masked prompt
+without saving it. A timeout keeps an unknown-delivery reservation and is not
+silently retried. See
 [EVALUATION.md](docs/EVALUATION.md) and [RESULTS.md](docs/RESULTS.md).
 
 Private runtime data, corpora, model files, JARs, caches and outputs stay outside

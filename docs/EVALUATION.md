@@ -1,7 +1,8 @@
 # Evaluation protocol
 
-Status: protocol plus a small development-only functional run. The held-out and
-live Jev benchmarks remain incomplete. See [RESULTS.md](RESULTS.md).
+Status: protocol plus small development-only functional and live Jev runs. The
+reviewed real-data and held-out benchmarks remain incomplete. See
+[RESULTS.md](RESULTS.md).
 
 ## Questions
 
@@ -155,7 +156,8 @@ work began, so it does **not** create an untouched validation or test cohort.
 executions across the two families, and four authored semantic pairs. The variants
 inherit their owned source family and cannot increase the independent-family count.
 Rules abstain on the semantic pairs; the lexical SequenceMatcher baseline has an
-explicit 0.86 equivalent threshold. Jev predictions are absent because no
-authorized key was available. This is a functionality and attribution check, not
-the precision/recall or macro-F1 study specified above. All detailed numbers and
-reproduction commands are in [RESULTS.md](RESULTS.md).
+explicit 0.86 equivalent threshold. Four live Jev calls matched all four authored
+labels, while the lexical baseline matched one. The model saw only source and
+destination text plus a fixed criterion. This is a functionality and attribution
+check, not the representative precision/recall or macro-F1 study specified above.
+All detailed numbers and reproduction commands are in [RESULTS.md](RESULTS.md).

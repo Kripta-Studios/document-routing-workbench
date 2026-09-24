@@ -1,8 +1,8 @@
 # SourceCheck implementation plan
 
-Date: 2026-09-24. Status: local implementation underway; checked boxes below have
-recorded evidence in [RESULTS.md](docs/RESULTS.md). Live Jev and later pilot gates
-remain open.
+Date: 2026-09-24. Status: local MVP implemented; checked boxes below have
+recorded evidence in [RESULTS.md](docs/RESULTS.md). Reviewed real-data Jev and
+later pilot gates remain open.
 Read [PRODUCT.md](PRODUCT.md) for the customer hypothesis and
 [DATASETS.md](docs/DATASETS.md) for the investigated sources.
 
@@ -260,8 +260,8 @@ Follow docs/DATASETS.md and docs/EVALUATION.md.
 
 ### Phase 3: semantic comparison and evaluation
 
-- [x] Integrate the optional Jev API path with typed validation, caches and budgets;
-      live calls remain unverified without credentials.
+- [x] Integrate and exercise the optional Jev API path with typed validation,
+      caches and budgets on constructed development pairs.
 - [ ] Freeze a representative family-level manifest before held-out test inference.
 - [ ] Evaluate deterministic baseline and live Jev extension on the same reviewed pairs.
 - [x] Separate authored faults, observed importer behavior and source/OCR failures.

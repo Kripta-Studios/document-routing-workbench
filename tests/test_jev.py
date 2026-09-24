@@ -3,6 +3,7 @@ import urllib.error
 import pytest
 from sourcecheck import jev,store,service
 from sourcecheck.jev import payload,validate
+from sourcecheck.evaluation import SEMANTIC_PAIRS, live_semantic_pairs
 from pathlib import Path
 
 def test_jev_contract_and_failures():
@@ -37,3 +38,18 @@ def test_transport_failure_keeps_unknown_delivery(tmp_path,monkeypatch):
     with store.db() as con:
         status=con.execute("SELECT status FROM semantic_runs").fetchone()[0]
     assert status=="delivery_unknown"
+
+def test_live_evaluation_uses_observable_pairs_without_labels(tmp_path,monkeypatch):
+    monkeypatch.setattr(store,"DATA",tmp_path)
+    sent=[]
+    def suggest(run_id,finding_id):
+        request=jev.preview(run_id,finding_id)["request"]
+        sent.append(request)
+        return {"status":"fresh","suggestion":{"choice":"equivalent","confidence":0.6},"usage":{"input_tokens":100,"output_tokens":10},"elapsed_ms":12}
+    monkeypatch.setattr(jev,"suggest",suggest)
+    records=[{"source":source,"destination":destination,"expected":expected,"jev_prediction":None} for source,destination,expected in SEMANTIC_PAIRS]
+    result=live_semantic_pairs(records)
+    assert result["attempted"]==result["completed"]==4
+    assert result["input_tokens"]==400
+    assert [request["state"] for request in sent]==[{"source_text":source,"destination_text":destination} for source,destination,_ in SEMANTIC_PAIRS]
+    assert all("expected" not in json.dumps(request) for request in sent)

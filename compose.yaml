@@ -8,6 +8,7 @@ services:
       SOURCECHECK_DATA: /data
       SOURCECHECK_TOOLS: /data/tools
       SOURCECHECK_MODELS: /data/models
+      TYPESAFE_API_KEY: ${TYPESAFE_API_KEY:-}
     volumes:
       - sourcecheck_data:/data
     read_only: true

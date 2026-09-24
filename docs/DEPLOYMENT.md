@@ -51,6 +51,7 @@ Linux/macOS verification. The package does not search sibling repositories.
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json --dry-run
 .\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json
+.\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json --live-jev --key-stdin
 .\.venv\Scripts\python.exe -m sourcecheck report --run RUN_ID
 .\.venv\Scripts\python.exe -m sourcecheck verify-export .runtime/exports/EXPORT_ID.zip
 .\.venv\Scripts\python.exe -m sourcecheck storage inspect
@@ -59,8 +60,11 @@ Linux/macOS verification. The package does not search sibling repositories.
 The offline demo executes genuine pinned Mustang imports on the owned fixture. The
 evaluation separates authored mutations from actual importer runs. Generated
 aggregate JSON remains in `.runtime/evaluation/`; the sanitized family manifest is
-`configs/evaluation-manifest.json`. These commands do not request Jev unless the
-user explicitly selects a semantic pair in the browser.
+`configs/evaluation-manifest.json`. Only `--live-jev` requests Jev from this CLI;
+`--key-stdin` reads a key through a masked terminal prompt into the process
+without writing it to a file. The browser requests Jev only after explicit
+selection of a semantic pair. Start the native server with `serve --key-stdin`
+to make the same process-scoped key available to browser requests.
 
 ## Settings and safety boundaries
 
@@ -102,6 +106,9 @@ The first container setup transfers its own pinned tools/models into the volume.
 `docker compose down` preserves the volume; `down -v` would delete it and is not
 part of routine shutdown. Container build/run results and image size are recorded
 in [RESULTS.md](RESULTS.md). Docker/WSL installation storage is additional.
+Compose passes an optional `TYPESAFE_API_KEY` from its launching environment;
+the key is not part of the image or compose file. The verified live run used the
+native server's masked `--key-stdin` prompt.
 
 ## Limits of this handoff
 

@@ -14,13 +14,12 @@ source families were run through two genuine Mustang versions each. These small
 development cases establish functionality and one narrow version difference; they
 do not estimate preservation accuracy or customer diagnosis time.
 
-**Jev's observed contribution: insufficient evidence.** The typed API path and
-failure accounting were tested without a live provider call. `TYPESAFE_API_KEY` was
-absent; there are no live suggestions, paid usage, timings, semantic macro-F1 or
-comparison against Jev. Rules alone abstained on four authored text pairs. The
-lexical demonstration predicted “insufficient evidence” for all four, including
-three pairs with a different authored label. Neither result is a real-data model
-benchmark. Odoo stored-data checks and customer pilots were not run.
+**Jev's measured value on real invoices: insufficient evidence.** Four live calls
+on constructed development text pairs matched all four authored labels. Rules
+abstained on those pairs; the lexical demonstration matched one label. This confirms
+the bounded API path and a narrow semantic capability, but the pairs were not
+independently reviewed or held out, and they are not a real-data model benchmark.
+Odoo stored-data checks and customer pilots were not run.
 
 ## Technical runs
 
@@ -38,7 +37,25 @@ held-out correctness claim.
 | Owned XML through Mustang 2.24.0 | 11 checks | 7 equal, 4 not checkable |
 | Private ConnectingEurope CII through 2.26.0 | 17 checks | 13 equal, 4 not checkable |
 | Same CII through 2.24.0 | 17 checks | 12 equal, 1 missing, 4 not checkable |
-| Authored semantic pairs | 4 | Rules abstained on 4; lexical baseline matched 1 authored label; Jev not run |
+| Authored semantic pairs | 4 | Rules abstained on 4; lexical baseline matched 1 label; live Jev matched 4 labels |
+
+The live run `b30e4d9895994e1489a8480d71f219ea` sent only constructed source
+and destination payment text plus the fixed criterion. Expected labels, case IDs
+and filenames were excluded from the provider request. The four validated fresh
+responses used 1,797 input tokens and 260 output tokens, with provider times of
+652–915 ms (median 702 ms). At the official input rate below, estimated input
+cost was USD 0.00007547; the conservative cumulative reservation was USD
+0.00023381, within the USD 1 cap. The four-class constructed macro-F1 was 1.0,
+with one example per class. Provider confidence was recorded, not treated as
+calibrated correctness. There were no failed or unknown-delivery live attempts.
+Raw responses and request hashes remain in ignored runtime storage. The key was
+read into a temporary process through a masked prompt and was not saved to disk.
+A replay of the first pair returned `cached`, preserved its original 450/63 token
+usage for provenance, recorded 0 ms model time and made no new provider request.
+The native server was restarted with `serve --key-stdin`, returned HTTP 200, and
+Chrome completed the semantic preview and cached-send UI path with zero JavaScript
+errors. The key remains process-scoped; restarting the server requires entering it
+again or supplying the authorized environment variable.
 
 The private CII independently declares `ContractReferencedDocument/IssuerAssignedID`
 as `SUBSCR571`. The 2.26.0 bridge returned `contract_reference: SUBSCR571`; the
@@ -126,10 +143,9 @@ installation independence; they are not native Linux/macOS desktop tests.
 
 The TypeSafe [model page](https://docs.typesafe.ai/models) listed `jev-1.13.0`
 at USD 0.042 per million input tokens on 2026-09-24; output tokens were listed
-as free. This is the estimate source for the USD 1.00 reservation cap. No live
-tokens were used in this implementation, and zero usage is not asserted for any
-untested provider behavior. The failure test simulates unknown delivery and leaves
-a conservative reservation, without a repeat network call.
+as free. This is the estimate source for the USD 1.00 reservation cap and the
+observed usage estimate above. The failure test also simulates unknown delivery
+and leaves a conservative reservation, without a repeat network call.
 
 ## Reproduction commands
 
@@ -144,21 +160,22 @@ uv sync --frozen --extra test
 .\.venv\Scripts\python.exe -m sourcecheck demo prepare --mode offline
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json
+.\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json --live-jev --key-stdin
 .\.venv\Scripts\python.exe -m sourcecheck report --run bff6cd9cc62c4d2182758bb114b3f219
 .\.venv\Scripts\python.exe -m sourcecheck verify-export .runtime/exports/0698196aa6af4790a3e8dec44ae804ac.zip
-.\.venv\Scripts\python.exe -m sourcecheck serve --host 127.0.0.1 --port 8770
+.\.venv\Scripts\python.exe -m sourcecheck serve --host 127.0.0.1 --port 8770 --key-stdin
 python tests/browser_check.py
 ```
 
 The `browser_check.py` command used an existing Python 3.14 Playwright installation
 and system Chrome, separate from the locked app environment. It requires the server
-already running and creates/deletes owned runtime test cases. The seven Python tests
+already running and creates/deletes owned runtime test cases. The current eight Python tests
 passed; only a third-party Starlette/AnyIO deprecation warning remained.
 
 ## Remaining gates
 
-- Live Jev evaluation on reviewed observable pairs, including actual usage and
-  a fair same-input rules/lexical comparison.
+- Live Jev evaluation on independently reviewed, observable real pairs with
+  a fair same-input rules/lexical comparison and held-out metrics.
 - More independently sourced and reviewed invoice families, a genuinely frozen
   validation/test split and human error analysis.
 - Native browser-toolbar zoom and physical-window checks; native Linux/macOS
