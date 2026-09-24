@@ -9,8 +9,8 @@ are implementation targets and must not be presented as tested setup instruction
 Repository access requires authorization because the repository is private:
 
 ```powershell
-git clone https://github.com/Kripta-Studios/document-routing-workbench.git
-cd document-routing-workbench
+git clone https://github.com/Kripta-Studios/sourcecheck.git
+cd sourcecheck
 git status
 ```
 

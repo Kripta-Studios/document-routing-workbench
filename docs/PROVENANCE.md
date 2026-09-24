@@ -12,7 +12,7 @@ Status: reuse plan. No upstream code has been copied into SourceCheck yet.
 Original workstation locations:
 
 ```text
-~/Desktop/KriptaStudios/document-routing-workbench
+~/Desktop/KriptaStudios/sourcecheck
 ~/Desktop/KriptaStudios/Jev_Ticketing_Classfication
 ~/Desktop/KriptaStudios/Reto_Maisa/trace-pay-main
 ```

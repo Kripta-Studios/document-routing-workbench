@@ -12,7 +12,7 @@ Input: original invoice, actual importer output, reviewed mapping/coverage profi
 Output: source-linked findings, human dispositions and a reusable regression case.
 
 The technical-consultancy archive handover and resubmission ideas are retired.
-The repository name is historical; the provisional product name is SourceCheck.
+The product and repository name is SourceCheck (sourcecheck on GitHub).
 
 ## Evidence and limits
 

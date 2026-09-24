@@ -9,9 +9,9 @@ the check when an importer changes.
 benchmark or deployment command has been implemented or executed here. Product value
 and Jev's contribution are hypotheses. [RESULTS.md](docs/RESULTS.md) records this status.
 
-The GitHub repository remains
-[Kripta-Studios/document-routing-workbench](https://github.com/Kripta-Studios/document-routing-workbench).
-SourceCheck is a provisional product name. This plan supersedes archive handover,
+The GitHub repository is
+[Kripta-Studios/sourcecheck](https://github.com/Kripta-Studios/sourcecheck).
+SourceCheck is the product name. This plan supersedes archive handover,
 country/type classification and the intermediate document-resubmission proposal.
 Git history preserves earlier plans; they are not additional release requirements.
 
@@ -94,8 +94,8 @@ SourceCheck installation sizes. See [storage accounting](docs/DATASETS.md#storag
 Only repository/documentation operations exist:
 
 ```powershell
-git clone https://github.com/Kripta-Studios/document-routing-workbench.git
-cd document-routing-workbench
+git clone https://github.com/Kripta-Studios/sourcecheck.git
+cd sourcecheck
 git status
 ```
 
