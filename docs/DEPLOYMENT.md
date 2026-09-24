@@ -6,7 +6,7 @@ are implementation targets and must not be presented as tested setup instruction
 
 ## Available today
 
-Repository access requires authorization because the repository is private:
+The public repository can be cloned over HTTPS without authentication:
 
 ```powershell
 git clone https://github.com/Kripta-Studios/sourcecheck.git

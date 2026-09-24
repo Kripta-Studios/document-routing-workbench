@@ -99,8 +99,8 @@ cd sourcecheck
 git status
 ```
 
-The private repository requires authorized GitHub access. SSH is an alternative when
-configured. The future web URL is `http://127.0.0.1:8770/`; this documentation update
+The repository is public and supports anonymous HTTPS cloning. SSH is an alternative
+when configured. The future web URL is `http://127.0.0.1:8770/`; this documentation update
 does not start a server.
 
 The implementer must supply tested fresh-machine setup, sample acquisition, offline
