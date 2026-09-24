@@ -1,0 +1,44 @@
+# Credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime and private data
+.cache/
+data/
+uploads/
+storage/
+models/
+exports/
+artifacts/
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+*.log
+
+# Python and browser tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+node_modules/
+dist/
+build/
+.playwright-mcp/
+test-results/
+playwright-report/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
