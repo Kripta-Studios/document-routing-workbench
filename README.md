@@ -1,115 +1,98 @@
 # SourceCheck
 
-A planned browser application for checking whether invoice ingestion preserves the
-information in the original document. Compare a PDF, image or electronic invoice
-with actual importer output, inspect discrepancies at their source, and repeat
-the check when an importer changes.
+SourceCheck is a local browser app for checking whether invoice imports preserve
+configured facts. It reads original XML independently of the importer, captures
+actual output from pinned Mustang versions or a supplied JSON/CSV export, and shows
+source evidence beside destination paths. A reviewer can record decisions, save a
+reference case, rerun after an importer or profile change, and export a verifiable ZIP.
 
-**Status: specification only, 2026-09-24.** No SourceCheck application, downloader,
-benchmark or deployment command has been implemented or executed here. Product value
-and Jev's contribution are hypotheses. [RESULTS.md](docs/RESULTS.md) records this status.
+The local MVP runs at **http://127.0.0.1:8770/**. It is a single-user development
+tool. It does not certify invoice compliance, perform payments, or prove what an ERP
+stores beyond the inspected export. [PRODUCT.md](PRODUCT.md) describes the intended
+users and later pilot gates; [RESULTS.md](docs/RESULTS.md) contains actual evidence.
 
-The GitHub repository is
-[Kripta-Studios/sourcecheck](https://github.com/Kripta-Studios/sourcecheck).
-SourceCheck is the product name. This plan supersedes archive handover,
-country/type classification and the intermediate document-resubmission proposal.
-Git history preserves earlier plans; they are not additional release requirements.
+## Quick start
 
-## Who it helps
-
-Start with small ERP integrators and developers maintaining invoice import pipelines.
-They need to check whether a connector update preserves references, dates, amounts,
-line descriptions and payment instructions. A successful import or valid XML alone
-does not demonstrate that every required item reached the intended destination.
-
-Example, not an observed result: an invoice contains a purchase-order reference
-and a direct-debit instruction. The importer retains the total but omits those
-items. Show the source evidence, inspected destination fields and mapping profile.
-
-An export may hide information the ERP actually stores. Report **not observable in
-this export** unless the destination contract establishes absence.
-
-## Proposed workflow
-
-1. Upload an original and its actual importer output, or run the supported local adapter.
-2. Review the destination mapping and coverage profile.
-3. Inspect native text, XML facts and OCR regions alongside destination values.
-4. Review deterministic differences and optional Jev semantic suggestions.
-5. Save a reviewed reference case and compare a subsequent importer run.
-6. Export a reproducible discrepancy report with provenance and integrity checks.
-
-The first local release closes this loop using Mustang as a real importer and an
-uploaded JSON destination format, with an explicit CSV mapping path. Odoo integration
-is a later milestone. Testing Mustang does not establish behavior in an ERP database.
-
-## Proposed distinction
-
-Combine invoice-specific source-to-destination checks, visual evidence, semantic
-comparison of text and reusable regression cases. Validators, ETL testing tools and
-trace-it overlap with parts of this workflow. We have not established exclusivity,
-market demand, lower costs or superior accuracy. Read [PRODUCT.md](PRODUCT.md) and
-[RESEARCH.md](docs/RESEARCH.md).
-
-## Jev's role
-
-Local parsers and OCR read the source. Code checks identifiers, amounts, dates,
-coverage and configured mappings. Jev may compare bounded source/destination text
-and suggest equivalent, contradictory, partially preserved or insufficient evidence.
-A person reviews semantic findings.
-
-Jev does not calculate totals, certify compliance, recover invisible data, generate
-source coordinates or authorize payments. Live use sends selected text to TypeSafe.
-Local OCR does not make the entire pipeline local. The app must work without live Jev.
-
-## Implementation handoff
-
-| Document | Purpose |
-|---|---|
-| [PRODUCT.md](PRODUCT.md) | User task, competition, scope and pilot gates |
-| [PLAN.md](PLAN.md) | Contracts, architecture, phases and acceptance |
-| [DATASETS.md](docs/DATASETS.md) | Sources, revisions, sizes and acquisition |
-| [EVALUATION.md](docs/EVALUATION.md) | References, splits, baselines and metrics |
-| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Target commands and installation verification |
-| [PROVENANCE.md](docs/PROVENANCE.md) | Reuse inventory and licenses |
-| [RESULTS.md](docs/RESULTS.md) | Collected evidence and missing measurements |
-| [NEXT_AGENT_PROMPT.md](NEXT_AGENT_PROMPT.md) | Prompt for the implementation session |
-
-All code, UI, documentation and reports use English. Preserve source documents in
-their original language. Agent instructions are in [AGENTS.md](AGENTS.md).
-
-## Reuse and storage
-
-Reuse the receipt-project Jev client, OCR adapter, viewer and measurement practices,
-plus pinned trace-it OCR source. Preserve both reference repositories. Record every
-adapted component and resolve relevant license questions.
-
-The investigated initial bundle is approximately **370 MB** of source files, published
-tools and existing OCR assets before runtimes, Git history and generated artifacts.
-Allow **5 GB free** for the local MVP; allow **10â€“15 GB** with the later Odoo environment
-when Docker is already installed. These are planning allowances, not measured
-SourceCheck installation sizes. See [storage accounting](docs/DATASETS.md#storage-accounting).
-
-## What can run today
-
-Only repository/documentation operations exist:
+The tested Windows setup used Python 3.12.13 via `uv`, Java 25 with Java 21 bytecode,
+and the pinned `uv.lock`:
 
 ```powershell
-git clone https://github.com/Kripta-Studios/sourcecheck.git
-cd sourcecheck
-git status
+uv venv --python 3.12 .venv
+uv sync --frozen --extra test
+.\.venv\Scripts\python.exe -m sourcecheck datasets prepare --dry-run
+.\.venv\Scripts\python.exe -m sourcecheck datasets prepare
+.\.venv\Scripts\python.exe -m sourcecheck models prepare --dry-run
+.\.venv\Scripts\python.exe -m sourcecheck models prepare
+.\.venv\Scripts\python.exe -m sourcecheck doctor
+.\.venv\Scripts\python.exe -m sourcecheck demo prepare --mode offline
+.\.venv\Scripts\python.exe -m sourcecheck serve --host 127.0.0.1 --port 8770
 ```
 
-The repository is public and supports anonymous HTTPS cloning. SSH is an alternative
-when configured. The future web URL is `http://127.0.0.1:8770/`; this documentation update
-does not start a server.
+`uv sync` installs the Python package. The acquisition commands put two pinned
+Mustang CLI JARs, one private upstream smoke sample and the small pinned Latin OCR
+weights in ignored local storage. Each command checks transfer bounds, file sizes and
+SHA-256 hashes. The demo performs **real local Mustang imports** on an owned XML
+fixture, while “offline” means no Jev request or network call after bootstrap. The
+downloaded ConnectingEurope sample is kept outside Git because its individual
+document redistribution rights were not established.
 
-The implementer must supply tested fresh-machine setup, sample acquisition, offline
-demo, live Jev, evaluation and export-verification commands.
-[DEPLOYMENT.md](docs/DEPLOYMENT.md) labels all proposed commands as unavailable today.
+The equivalent POSIX command shape is `uv venv --python 3.12 .venv`, `uv sync
+--frozen --extra test`, then `.venv/bin/python -m sourcecheck ...`. Native Linux
+and macOS installation has not been exercised; see
+[DEPLOYMENT.md](docs/DEPLOYMENT.md) for the precise status and container setup.
 
-## Credentials and files
+## Use the app
 
-Use server-side `TYPESAFE_API_KEY` from the environment or an ignored configuration
-file. Never copy credentials from conversation history. Keep originals, OCR text,
-provider responses, databases, models and downloaded corpora outside Git. Commit
-only reviewed, permitted fixtures and sanitized reports.
+1. Create a case from XML, PDF, PNG or JPEG. XML is parsed without DTDs/entities;
+   native PDF text and local OCR are distinct observations. Hybrid PDF embedded XML
+   is kept as a separate representation.
+2. Review the mapping profile. A check states its source selector, destination
+   path, requirement and coverage. Saving a profile creates a version.
+3. Run Mustang 2.26.0 or 2.24.0, or upload JSON/CSV. Uploaded output has unverified
+   execution provenance. It needs a reviewed per-field coverage contract to treat
+   absent paths as missing; CSV also needs an explicit column/entity/locale mapping.
+4. Select findings to inspect raw/normalized values and source evidence. PDF/image
+   pages support navigation, zoom and fit; OCR regions are selectable. Enter reviewed
+   source facts for non-XML documents without inventing coordinates.
+5. Record a disposition and reason. Save a reference explicitly. Reruns keep older
+   reviews as history and show changes without inheriting approval.
+6. Export a report ZIP and verify it independently:
+
+```powershell
+.\.venv\Scripts\python.exe -m sourcecheck report --run RUN_ID
+.\.venv\Scripts\python.exe -m sourcecheck verify-export .runtime/exports/EXPORT_ID.zip
+```
+
+The report contains a snapshot, findings CSV, self-contained HTML, provenance and a
+SHA-256 manifest. Integrity checks prove archive consistency, not the truth of the
+business facts. Server-side deletion removes local originals, derived outputs,
+reviews, references and exports; downloaded ZIPs remain outside its control.
+
+## Verification and limits
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json --dry-run
+.\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json
+.\.venv\Scripts\python.exe -m sourcecheck storage inspect
+```
+
+The functional suite uses owned, constructed mutations. The real importer comparison
+currently covers two source families and two Mustang versions; it is too small for
+accuracy claims. Mustang's narrow bridge exposes selected identifiers, dates,
+references, payment fields and line items. Declared totals are unobserved through
+this bridge, even when present in the XML. An old version returning a null reference
+is reported in the scope of this inspected bridge, not generalized to ERP behavior.
+
+Jev 1.13.0 can optionally suggest a relation for a bounded text pair after explicit
+selection. Its request preview shows the text sent to TypeSafe. A server-side
+`TYPESAFE_API_KEY` is required; a configured key does not trigger calls by itself.
+No live Jev evaluation was possible in this implementation environment. A timeout
+keeps an unknown-delivery reservation and is not silently retried. See
+[EVALUATION.md](docs/EVALUATION.md) and [RESULTS.md](docs/RESULTS.md).
+
+Private runtime data, corpora, model files, JARs, caches and outputs stay outside
+Git. The two inspected sibling repositories are never required for a fresh install.
+Their pinned revisions and licensing limitations are recorded in
+[PROVENANCE.md](docs/PROVENANCE.md). Odoo stored-data comparison and customer pilots
+remain later gates.

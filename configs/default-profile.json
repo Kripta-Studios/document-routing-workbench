@@ -1,0 +1,18 @@
+{
+  "name": "CII to Mustang bridge",
+  "version": 1,
+  "coverage": "partial",
+  "missing_semantics": "A missing bridge path is unobserved unless the field declares complete coverage.",
+  "checks": [
+    {"id":"number","label":"Invoice number","source":"ExchangedDocument/ID","destination":"number","kind":"identifier","required":true,"coverage":"complete"},
+    {"id":"issue_date","label":"Issue date","source":"ExchangedDocument/IssueDateTime/DateTimeString","destination":"issue_date","kind":"date","required":true,"coverage":"complete"},
+    {"id":"currency","label":"Currency","source":"ApplicableHeaderTradeSettlement/InvoiceCurrencyCode","destination":"currency","kind":"identifier","required":true,"coverage":"complete"},
+    {"id":"buyer_order","label":"Buyer order reference","source":"BuyerOrderReferencedDocument/IssuerAssignedID","destination":"buyer_order","kind":"identifier","required":true,"coverage":"complete"},
+    {"id":"contract_reference","label":"Contract reference","source":"ContractReferencedDocument/IssuerAssignedID","destination":"contract_reference","kind":"identifier","required":true,"coverage":"complete"},
+    {"id":"payment_reference","label":"Payment reference","source":"SpecifiedTradeSettlementPaymentMeans/PaymentReference","destination":"payment_reference","kind":"identifier","required":false,"coverage":"partial"},
+    {"id":"grand_total","label":"Invoice total","source":"SpecifiedTradeSettlementHeaderMonetarySummation/GrandTotalAmount","destination":"grand_total","kind":"decimal","required":true,"coverage":"partial"},
+    {"id":"due_payable","label":"Amount due","source":"SpecifiedTradeSettlementHeaderMonetarySummation/DuePayableAmount","destination":"due_payable","kind":"decimal","required":true,"coverage":"partial"}
+  ],
+  "line_alignment": "stable_id",
+  "lines_coverage": "complete"
+}

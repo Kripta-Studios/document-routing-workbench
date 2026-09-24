@@ -1,0 +1,8 @@
+{
+  "seed": 20260924,
+  "families": [
+    {"id":"owned-minimal-cii","source":"fixtures/owned-minimal-cii.xml","origin":"deterministic_constructed","redistribution":"owned"},
+    {"id":"connecting-europe-business-02","source":"private acquisition: cii-business-example-02","origin":"upstream","redistribution":"not included in Git"}
+  ],
+  "notes":"Derived mutations inherit their source family's split. One owned family is too small for performance claims."
+}

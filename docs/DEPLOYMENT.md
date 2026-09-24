@@ -1,132 +1,111 @@
-# Deployment and command contract
+# Local deployment and command contract
 
-Status: planned, 2026-09-24. There is no runnable SourceCheck package, server,
-Dockerfile or downloader in this repository yet. Commands marked proposed below
-are implementation targets and must not be presented as tested setup instructions.
+Updated 2026-09-24. Windows 11, Python 3.12.13 and Java 25 were exercised. The Java
+bridge compiles for Java 21. Native Linux/macOS setup instructions below are
+equivalent commands but have not been exercised. Docker verification status is in
+[RESULTS.md](RESULTS.md).
 
-## Available today
+## Install and bootstrap
 
-The public repository can be cloned over HTTPS without authentication:
-
-```powershell
-git clone https://github.com/Kripta-Studios/sourcecheck.git
-cd sourcecheck
-git status
-```
-
-The same Git commands work in a POSIX shell. Use an already configured SSH remote
-if preferred; do not copy the original workstation's SSH alias onto another machine.
-
-## Proposed runtime
-
-- Python 3.12 with pinned dependencies and a rebuildable virtual environment.
-- Java 21 for the selected Mustang bridge/tools, subject to actual compatibility checks.
-- Browser UI served by the local application.
-- SQLite and local private storage.
-- Loopback address 127.0.0.1, port 8770.
-- No GPU required for the planned local OCR/structured comparison path.
-- Live Jev requires authorized outbound API access and TYPESAFE_API_KEY.
-- Odoo/PostgreSQL need Docker only at the optional ERP milestone.
-
-An implementation must choose a dependency lock strategy and exercise it. Avoid
-installing all trace-it backend services merely to call its OCR reader.
-
-## Proposed setup commands — not implemented
-
-The implementation should support equivalent PowerShell commands:
+Use a clean checkout with `uv` and JDK 21 or newer available on `PATH`. These
+PowerShell commands were executed in the implementation workspace:
 
 ```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e .
+uv venv --python 3.12 .venv
+uv sync --frozen --extra test
 .\.venv\Scripts\python.exe -m sourcecheck doctor
 .\.venv\Scripts\python.exe -m sourcecheck datasets prepare --manifest configs/sources.json --dry-run
 .\.venv\Scripts\python.exe -m sourcecheck datasets prepare --manifest configs/sources.json
+.\.venv\Scripts\python.exe -m sourcecheck models prepare --dry-run
+.\.venv\Scripts\python.exe -m sourcecheck models prepare
+.\.venv\Scripts\python.exe -m sourcecheck demo prepare --mode offline
 .\.venv\Scripts\python.exe -m sourcecheck serve --host 127.0.0.1 --port 8770
 ```
 
-POSIX equivalents:
+Open `http://127.0.0.1:8770/`. The first dataset command prints every planned URL,
+revision, size, license note, target and cache status. The download enforces the
+manifest's 1 GiB dataset and 4 GiB aggregate limits. The model command uses pinned
+PaddlePaddle revisions and a 20 MiB model transfer ceiling. Existing matching
+files avoid new transfers. Java compilation occurs on the first Mustang run.
+
+POSIX commands have the same order:
 
 ```bash
-python3.12 -m venv .venv
-.venv/bin/python -m pip install -e .
+uv venv --python 3.12 .venv
+uv sync --frozen --extra test
 .venv/bin/python -m sourcecheck doctor
 .venv/bin/python -m sourcecheck datasets prepare --manifest configs/sources.json --dry-run
 .venv/bin/python -m sourcecheck datasets prepare --manifest configs/sources.json
+.venv/bin/python -m sourcecheck models prepare --dry-run
+.venv/bin/python -m sourcecheck models prepare
+.venv/bin/python -m sourcecheck demo prepare --mode offline
 .venv/bin/python -m sourcecheck serve --host 127.0.0.1 --port 8770
 ```
 
-The package, manifest and commands above do not exist yet. Replace editable-install
-examples with tested locked installation instructions when dependency files exist.
-The serve command should supervise the worker so another user can launch the complete
-app in one step. Doctor should report Java, model hashes, writable storage, tool
-versions and live-provider configuration presence without revealing secrets.
+These POSIX commands are provided for installation parity, not a claim of native
+Linux/macOS verification. The package does not search sibling repositories.
 
-## Proposed operational commands — not implemented
+## Operational commands
 
-```text
-python -m sourcecheck demo prepare --mode offline
-python -m sourcecheck evaluate --config configs/evaluation.json --dry-run
-python -m sourcecheck evaluate --config configs/evaluation.json
-python -m sourcecheck report --run <run-id>
-python -m sourcecheck verify-export <report.zip>
-python -m sourcecheck storage inspect
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json --dry-run
+.\.venv\Scripts\python.exe -m sourcecheck evaluate --config configs/evaluation.json
+.\.venv\Scripts\python.exe -m sourcecheck report --run RUN_ID
+.\.venv\Scripts\python.exe -m sourcecheck verify-export .runtime/exports/EXPORT_ID.zip
+.\.venv\Scripts\python.exe -m sourcecheck storage inspect
 ```
 
-Offline demonstration must work without credentials. Label authored targets and
-recorded provider responses. A live demonstration executes actual OCR/importer/Jev
-calls and identifies fresh versus cached outputs.
+The offline demo executes genuine pinned Mustang imports on the owned fixture. The
+evaluation separates authored mutations from actual importer runs. Generated
+aggregate JSON remains in `.runtime/evaluation/`; the sanitized family manifest is
+`configs/evaluation-manifest.json`. These commands do not request Jev unless the
+user explicitly selects a semantic pair in the browser.
 
-Report regeneration should need no provider calls. Evaluation must respect frozen
-manifests and cumulative budgets. Storage inspection separates datasets, models,
-database, caches and exports. Deletion commands must preview concrete targets.
+## Settings and safety boundaries
 
-## Configuration contract
+| Setting | Default | Meaning |
+|---|---|---|
+| `SOURCECHECK_DATA` | `.runtime/` | SQLite, originals, captures, models, caches, exports |
+| `SOURCECHECK_TOOLS` | `external/tools/` | Pinned Mustang JARs |
+| `SOURCECHECK_MODELS` | `<data>/models/` | Pinned local OCR models |
+| `SOURCECHECK_JAVA`, `SOURCECHECK_JAVAC` | PATH commands | Java execution/compiler |
+| `TYPESAFE_API_KEY` | absent | Optional server-side Jev access |
+| Jev endpoint/model | `https://api.typesafe.ai/v1/systemone`, `jev-1.13.0` | Fixed by code |
+| Jev estimate budget | USD 1.00 | Conservative cumulative reservation; unknown delivery remains charged |
+| Intake | 25 MiB/file, 20 PDF pages, 18 MP/image | Server-enforced bounds |
+| Mustang subprocess | 45 s, 384 MiB Java heap | One local process per run; two run slots |
 
-Document the implemented names and defaults for:
+The server binds to loopback by default, checks the Host and requires a same-origin
+mutation header. It has no authentication and is not intended for a shared/public
+interface. Selected text is previewed before optional Jev transmission. The source
+files and provider cache never enter static serving; case deletion removes related
+server-held content. Already downloaded exports remain under the user's control.
 
-- Runtime storage root and database path.
-- OCR model directory and expected hashes.
-- Java executable, tool paths and pinned artifacts.
-- Input/page/pixel/text limits and worker concurrency.
-- Dataset/bootstrap byte caps and live API estimate budget.
-- Provider endpoint, fixed model ID, timeout and cache behavior.
-- Selected profile, destination adapter and live-transmission mode.
+## Container
 
-Read TYPESAFE_API_KEY on the server. Never put a real key in examples, screenshots,
-browser storage, query strings or commits. Supply an .env.example with placeholders
-only when implementation adds configuration loading.
+`Dockerfile` packages Python 3.12, the locked dependencies and Java 21. Compose
+publishes only loopback port 8770, stores tools/models/data in a persistent named
+volume, mounts a bounded temporary directory and makes the container root filesystem
+read-only. It does not include Odoo.
 
-A configured key alone should not make every upload transmit content. The user
-selects live semantic comparison; show what representation is sent. Protect local
-mutation endpoints against unintended cross-site requests.
+```bash
+docker compose build
+docker compose run --rm app datasets prepare --manifest configs/sources.json --dry-run
+docker compose run --rm app datasets prepare --manifest configs/sources.json
+docker compose run --rm app models prepare
+docker compose up -d
+docker compose run --rm app demo prepare --mode offline
+```
 
-## Containers
+The first container setup transfers its own pinned tools/models into the volume.
+`docker compose down` preserves the volume; `down -v` would delete it and is not
+part of routine shutdown. Container build/run results and image size are recorded
+in [RESULTS.md](RESULTS.md). Docker/WSL installation storage is additional.
 
-The future application Docker setup must include a documented persistent volume,
-model/tool bootstrap, read-only code and bounded worker execution. Do not assume
-the app container also includes a full ERP.
+## Limits of this handoff
 
-For the optional Odoo milestone, use a separate Compose profile with Odoo 19 and
-PostgreSQL 16, pinned compatible images, isolated test database and no production
-credentials. Capture actual stored-data snapshots and declare queried field coverage.
-Architecture-specific digests and measured layer sizes are in DATASETS.md.
-
-Docker/WSL installation storage is additional to the documented image totals.
-Public/shared deployment requires a later authentication and access-control design;
-binding the local app to all interfaces is not a production deployment guide.
-
-## Fresh-machine acceptance
-
-Before claiming deployability:
-
-1. Install from a clean checkout with no sibling paths or old caches.
-2. Bootstrap tools/models under the documented budgets.
-3. Run the offline demonstration and a real Mustang case.
-4. Restart web/worker and confirm persistent progress/review.
-5. Generate and independently verify a report.
-6. Run genuine OCR and live Jev when credentials are available.
-7. Record OS, architecture, dependency lock, actual commands, download bytes and disk use.
-
-Verify PowerShell and Linux/macOS instructions where environments are available.
-State clearly which OS was actually exercised and which commands remain unverified.
-A Linux container run does not verify native macOS setup.
+The Windows native path, clean Windows clone and isolated Linux container were
+verified. Their checks are recorded in [RESULTS.md](RESULTS.md). Live Jev requires an
+authorized `TYPESAFE_API_KEY`; a missing key leaves that evaluation incomplete.
+Odoo and real customer diagnosis pilots are later milestones.

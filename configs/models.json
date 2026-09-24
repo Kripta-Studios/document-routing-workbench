@@ -1,0 +1,12 @@
+{
+  "profile": "v5-latin",
+  "trace_it_revision": "84c4c0463862640940efb1232344287a2d03bcf5",
+  "license": "Apache-2.0 tags on both pinned PaddlePaddle Hugging Face model cards, inspected 2026-09-24",
+  "files": [
+    {"role":"det","repo":"PaddlePaddle/PP-OCRv5_mobile_det_onnx","revision":"df0bd9dee2bc627e80a2a1798ccab35a332e22d6","name":"inference.onnx","bytes":4826518,"sha256":"a431985659dc921974177a95adcfbb90fd9e51989a5e04d70d0b75f597b6e61d"},
+    {"role":"det","repo":"PaddlePaddle/PP-OCRv5_mobile_det_onnx","revision":"df0bd9dee2bc627e80a2a1798ccab35a332e22d6","name":"inference.yml","bytes":903},
+    {"role":"rec","repo":"PaddlePaddle/latin_PP-OCRv5_mobile_rec_onnx","revision":"89d3a50e2c27e2e7cceeab0e944c25c807d5db4f","name":"inference.onnx","bytes":8042023,"sha256":"7888113072263cb471b93f66dd5e2ad70548dc526fa1ace760d0d973dd121498"},
+    {"role":"rec","repo":"PaddlePaddle/latin_PP-OCRv5_mobile_rec_onnx","revision":"89d3a50e2c27e2e7cceeab0e944c25c807d5db4f","name":"inference.yml","bytes":6817}
+  ],
+  "keys_sha256":"5ddc5c6086d61db3e1485f1237e059b89df9a228cebdac40a54406c6005bca67"
+}

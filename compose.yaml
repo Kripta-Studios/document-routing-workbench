@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8770:8770"
+    environment:
+      SOURCECHECK_CONTAINER: "1"
+      SOURCECHECK_DATA: /data
+      SOURCECHECK_TOOLS: /data/tools
+      SOURCECHECK_MODELS: /data/models
+    volumes:
+      - sourcecheck_data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m
+    mem_limit: 1g
+    restart: unless-stopped
+volumes:
+  sourcecheck_data:

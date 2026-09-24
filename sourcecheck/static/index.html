@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SourceCheck · Invoice import evidence</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to workspace</a>
+  <header class="topbar"><a class="brand" href="/" aria-label="SourceCheck home"><span class="mark">S<span>∕</span>C</span><span>SourceCheck</span></a><span class="topnote">LOCAL INVOICE LAB <span class="signal">●</span> 127.0.0.1</span></header>
+  <main id="workspace" class="shell">
+    <section class="intro"><div><p class="eyebrow">01 / IMPORT PRESERVATION</p><h1>See what reached<br><em>the destination.</em></h1><p class="lead">Compare original invoice evidence with an importer run or an uploaded export. Review each check in its declared coverage, then keep the case for the next version.</p></div><div class="intro-rule"><span>ORIGINAL</span><b>→</b><span>IMPORTER</span><b>→</b><span>REVIEW</span></div></section>
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+    <section class="start-grid" aria-label="Create and select cases">
+      <form id="create-form" class="panel create-panel"><div class="panel-head"><p class="eyebrow">NEW CASE</p><span class="index">A01</span></div><h2>Bring an invoice in</h2><label>Case name<input name="title" placeholder="e.g. connector release check"></label><label>Original PDF, XML, PNG or JPEG<input name="source" type="file" accept=".pdf,.xml,.png,.jpg,.jpeg" required></label><label class="inline"><input name="use_ocr" type="checkbox" checked> Read scanned pages with local OCR</label><button class="primary" type="submit">Create case <span>↗</span></button><p class="hint">25 MiB per file · 20 PDF pages · Originals stay on this computer.</p></form>
+      <section class="panel case-panel"><div class="panel-head"><p class="eyebrow">SAVED WORK</p><span class="index" id="case-count">00</span></div><h2>Cases</h2><div id="case-list" class="case-list"><p class="empty">No cases yet.</p></div></section>
+    </section>
+    <section id="case-workspace" class="case-workspace" hidden>
+      <div class="workspace-title"><div><p class="eyebrow">ACTIVE CASE <span id="case-id"></span></p><h2 id="case-title"></h2><p id="case-meta" class="muted"></p></div><div class="title-actions"><button id="delete-btn" class="quiet danger" type="button">Delete case</button></div></div>
+      <div class="control-grid">
+        <section class="panel control-panel">
+          <div class="panel-head"><p class="eyebrow">02 / DESTINATION</p><span class="index">B01</span></div><h3>Compare a run</h3>
+          <form id="run-form">
+            <label>Capture method<select name="mode" id="mode"><option value="mustang">Real Mustang importer</option><option value="uploaded_json">Uploaded JSON export</option><option value="uploaded_csv">Uploaded CSV export</option><option value="authored_simulation">Authored simulation</option></select></label>
+            <label id="version-wrap">Mustang version<select name="version"><option>2.26.0</option><option>2.24.0</option></select></label>
+            <label id="destination-wrap" hidden>Destination file<input name="destination" type="file" accept=".json,.csv"></label>
+            <label id="coverage-wrap" hidden>Reviewed JSON field coverage contract<textarea name="coverage_contract" rows="3" spellcheck="false" placeholder='{"reviewed":true,"field_coverage":{"number":"complete","buyer_order":"unknown"}}'></textarea></label>
+            <label id="csv-wrap" hidden>Reviewed CSV mapping and coverage contract<textarea name="csv_contract" rows="4" spellcheck="false" placeholder='{"reviewed":true,"entity_column":"invoice_id","columns":{"invoice_id":"number"},"field_coverage":{"number":"complete"},"decimal_separator":"."}'></textarea></label>
+            <label>Compare to earlier run<select name="previous_id" id="previous-select"><option value="">First run</option></select></label>
+            <label>Reviewed source facts for non-XML originals (optional JSON)<textarea name="manual" rows="3" spellcheck="false" placeholder='{"number":[{"raw":"INV-1","path":"reviewed page text","page":1,"method":"human_reviewed","bbox":null}]}'></textarea></label>
+            <button class="primary" type="submit">Run comparison <span>→</span></button>
+          </form><p class="hint">A missing path is a loss only under a complete field contract. Manually supplied facts carry no invented boxes.</p>
+        </section>
+        <section class="panel control-panel"><div class="panel-head"><p class="eyebrow">03 / CONTRACT</p><span class="index">B02</span></div><h3>Mapping &amp; coverage</h3><p class="muted">Edit required facts, source selectors, destination paths and field coverage. Saving creates a new version.</p><label>Profile JSON<textarea id="profile-json" rows="9" spellcheck="false"></textarea></label><div class="button-line"><button id="preview-profile" class="quiet" type="button">Preview changes</button><button id="save-profile" class="secondary" type="button">Save new version</button></div><div id="profile-preview" class="hint"></div></section>
+      </div>
+      <section class="panel run-panel"><div class="panel-head"><p class="eyebrow">RUN HISTORY</p><span class="index" id="run-count">00</span></div><div id="run-list" class="run-list"><p class="empty">No runs yet.</p></div></section>
+      <section id="run-workspace" class="run-workspace" hidden><div class="workspace-title"><div><p class="eyebrow">04 / EVIDENCE REVIEW</p><h2 id="run-title">Run</h2><p id="run-meta" class="muted"></p></div><div class="title-actions"><button id="reference-btn" class="secondary" type="button">Save reviewed reference</button><button id="export-btn" class="primary" type="button">Export report ↗</button></div></div><div id="run-error" class="error" hidden></div><div id="diff-panel" class="diff-panel" hidden></div><div class="review-grid"><section class="panel source-panel"><div class="panel-head"><p class="eyebrow">SOURCE / ORIGINAL</p><span class="index" id="source-kind"></span></div><div class="viewer-bar"><button id="prev-page" class="icon-btn" aria-label="Previous page" type="button">←</button><span id="page-indicator">Page 1</span><button id="next-page" class="icon-btn" aria-label="Next page" type="button">→</button><button id="fit-btn" class="quiet" type="button">Fit</button><button id="zoom-out" class="icon-btn" aria-label="Zoom out" type="button">−</button><span id="zoom-label">100%</span><button id="zoom-in" class="icon-btn" aria-label="Zoom in" type="button">+</button></div><div id="source-view" class="source-view"></div><div class="transcript"><h4>Observed text <span class="muted">(select a line)</span></h4><div id="source-lines" class="source-lines"></div></div></section><section class="panel findings-panel"><div class="panel-head"><p class="eyebrow">CHECKS / DESTINATION</p><span class="index" id="finding-count">00</span></div><div class="filters"><label>Result<select id="filter-result"><option value="">All results</option><option>equal</option><option>different</option><option>missing</option><option>not_checkable</option><option>semantic_review</option></select></label><label>Coverage<select id="filter-coverage"><option value="">All coverage</option><option>observable</option><option>unobserved</option><option>ambiguous</option></select></label><label>Review<select id="filter-review"><option value="">All reviews</option><option>pending</option><option>confirmed_issue</option><option>accepted_transformation</option><option>dismissed</option><option>unresolved</option></select></label></div><div id="findings-list" class="findings-list"></div><div id="finding-detail" class="finding-detail"><p class="empty">Select a check to see its source and destination evidence.</p></div></section></div></section>
+    </section>
+  </main><footer><span>SOURCECHECK / LOCAL MVP</span><span>Checks are scoped to evidence and coverage. They do not certify an invoice.</span></footer>
+</body>
+</html>

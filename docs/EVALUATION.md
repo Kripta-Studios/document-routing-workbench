@@ -1,6 +1,7 @@
 # Evaluation protocol
 
-Status: planned; no SourceCheck benchmark has run. See [RESULTS.md](RESULTS.md).
+Status: protocol plus a small development-only functional run. The held-out and
+live Jev benchmarks remain incomplete. See [RESULTS.md](RESULTS.md).
 
 ## Questions
 
@@ -144,3 +145,17 @@ After technical validation, compare actual diagnosis/acceptance tasks with integ
 current process. Include mapping/setup and correction time, counterbalance task order,
 record important missed issues and repeat use. Product targets in PRODUCT.md are
 hypotheses. Software completion and business validation are separate milestones.
+
+## Implementation note, 2026-09-24
+
+`configs/evaluation-manifest.json` freezes two inspected families, both assigned to
+development by the specified seed/hash rule. It was written after implementation
+work began, so it does **not** create an untouched validation or test cohort.
+`sourcecheck evaluate` reports six authored functional variants, four actual Mustang
+executions across the two families, and four authored semantic pairs. The variants
+inherit their owned source family and cannot increase the independent-family count.
+Rules abstain on the semantic pairs; the lexical SequenceMatcher baseline has an
+explicit 0.86 equivalent threshold. Jev predictions are absent because no
+authorized key was available. This is a functionality and attribution check, not
+the precision/recall or macro-F1 study specified above. All detailed numbers and
+reproduction commands are in [RESULTS.md](RESULTS.md).

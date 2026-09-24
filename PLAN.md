@@ -1,6 +1,8 @@
 # SourceCheck implementation plan
 
-Date: 2026-09-24. Status: specification only. All implementation boxes are unchecked.
+Date: 2026-09-24. Status: local implementation underway; checked boxes below have
+recorded evidence in [RESULTS.md](docs/RESULTS.md). Live Jev and later pilot gates
+remain open.
 Read [PRODUCT.md](PRODUCT.md) for the customer hypothesis and
 [DATASETS.md](docs/DATASETS.md) for the investigated sources.
 
@@ -235,44 +237,47 @@ Follow docs/DATASETS.md and docs/EVALUATION.md.
 
 ### Phase 0: contracts and provenance
 
-- [ ] Inspect pinned reusable source, licensing and dependency compatibility.
-- [ ] Record source manifests, licenses, artifact versions and size plans.
-- [ ] Define independent observations, profiles, coverage and finding schemas.
-- [ ] Package the app, add migrations and create owned functional fixtures.
+- [x] Inspect pinned reusable source, licensing and dependency compatibility.
+- [x] Record source manifests, licenses, artifact versions and size plans.
+- [x] Define independent observations, profiles, coverage and finding schemas.
+- [x] Package the app, add migrations and create owned functional fixtures.
 
 ### Phase 1: offline product workflow
 
-- [ ] Implement persistent intake, safe XML/PDF/image readers and JSON/CSV mapping.
-- [ ] Implement deterministic comparisons, coverage and ambiguous line alignment.
-- [ ] Build responsive review, evidence navigation and recovery.
-- [ ] Preserve review history; save cases and compare reruns/profile revisions.
-- [ ] Implement deletion, snapshot report export and offline integrity verification.
+- [x] Implement persistent intake, safe XML/PDF/image readers and JSON/CSV mapping.
+- [x] Implement deterministic comparisons, coverage and ambiguous line alignment.
+- [x] Build responsive review, evidence navigation and recovery.
+- [x] Preserve review history; save cases and compare reruns/profile revisions.
+- [x] Implement deletion, snapshot report export and offline integrity verification.
 
 ### Phase 2: genuine importer and OCR
 
-- [ ] Execute pinned Mustang and document bridge/API coverage.
-- [ ] Run real local OCR using pinned models and source provenance.
-- [ ] Exercise native PDF, hybrid XML/PDF and scanned-image cases.
-- [ ] Compare two pinned importer versions without presuming failures or improvements.
-- [ ] Record actual inputs, outputs, timings and adapter limitations.
+- [x] Execute pinned Mustang and document bridge/API coverage.
+- [x] Run real local OCR using pinned models and source provenance.
+- [x] Exercise native PDF, hybrid XML/PDF and scanned-image cases.
+- [x] Compare two pinned importer versions without presuming failures or improvements.
+- [x] Record actual inputs, outputs, timings and adapter limitations.
 
 ### Phase 3: semantic comparison and evaluation
 
-- [ ] Integrate real Jev with typed validation, caches and budgets.
-- [ ] Freeze family-level manifests and annotation provenance before test inference.
-- [ ] Evaluate deterministic baseline and Jev extension under the same observations.
-- [ ] Separate synthetic faults, observed importer behavior and source/OCR failures.
-- [ ] Publish reproducible permitted aggregates and reviewed error analysis.
-- [ ] State whether Jev adds useful coverage or introduces unacceptable false alarms.
+- [x] Integrate the optional Jev API path with typed validation, caches and budgets;
+      live calls remain unverified without credentials.
+- [ ] Freeze a representative family-level manifest before held-out test inference.
+- [ ] Evaluate deterministic baseline and live Jev extension on the same reviewed pairs.
+- [x] Separate authored faults, observed importer behavior and source/OCR failures.
+- [ ] Publish representative held-out aggregates and reviewed error analysis.
+- [x] State the current Jev conclusion: insufficient evidence for measured value.
 
 ### Phase 4: local MVP handoff
 
-- [ ] Exercise the complete workflow in a real browser at required widths/zoom.
-- [ ] Verify restart recovery, stale-review protection and export consistency.
-- [ ] Verify clean setup and document actual PowerShell and Linux/macOS commands.
-- [ ] Add app container setup; distinguish it from the optional ERP environment.
-- [ ] Replace proposed commands with tested instructions and record environment evidence.
-- [ ] Update docs/RESULTS.md, review the diff, commit and push.
+- [ ] Exercise true browser zoom at 125%/200%; Chromium viewport/DPR emulation and
+      the four required 100% widths have been verified.
+- [x] Verify restart recovery, stale-review protection and export consistency.
+- [x] Verify clean Windows clone and document actual PowerShell and Linux/macOS
+      commands; native Linux/macOS desktop runs remain unverified.
+- [x] Add and verify app container setup; distinguish it from the optional ERP environment.
+- [x] Replace proposed commands with tested Windows instructions and record evidence.
+- [x] Update docs/RESULTS.md, review the diff, commit and push.
 
 ### Phase 5: optional ERP and customer pilot
 

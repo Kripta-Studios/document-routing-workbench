@@ -1,6 +1,8 @@
 # Reuse and provenance
 
-Status: reuse plan. No upstream code has been copied into SourceCheck yet.
+Status: implementation inventory, 2026-09-24. No code from the two unlicensed
+reference repositories was copied into SourceCheck. Their behavior and API shape
+were inspected; SourceCheck adapters were written independently.
 
 ## Pinned references
 
@@ -85,3 +87,47 @@ criteria/model versions to each run.
 
 Distinguish upstream assertions, assistant interpretation, deterministic construction,
 human review and actual execution. An integrity hash does not establish source truth.
+
+## Implemented inspection and artifact record
+
+The local receipt and trace-it checkouts were read at the exact revisions above and
+were not modified. Inspected source SHA-256 values:
+
+| Inspected source | SHA-256 | SourceCheck counterpart |
+|---|---|---|
+| `jev_tickets/client.py` | `1816931283aaf1ecb5db32d62574bac4c6ab519e37971dec5f4586fca3ad9662` | Independent bounded client in `sourcecheck/jev.py` |
+| `jev_tickets/ocr.py` | `d3e293d723f0c713750914b34b0932d3fae9ffbe68df7ab71bebc8dfba92e09d` | Independent reader in `sourcecheck/source.py` |
+| `trace-it/.../ocr/local.py` | `9b8ee9d62747125d9871d4d7bd9441d168c4db6a77ae5df4ee184856febf6de5` | Explicit RapidOCR settings and pinned model files |
+
+The receipt viewer and evaluation notes informed UI and measurement choices. No
+source files, weights or caches from either reference tree are published in Git.
+The receipt/trace-it code license gap remains relevant to any future direct copy;
+this implementation does not rely on redistribution permission for that code.
+
+Machine-readable plans are in `configs/sources.json` and `configs/models.json`.
+Actual local acquisition records are ignored runtime files. The two Mustang JARs
+were downloaded from `core-2.26.0` and `core-2.24.0`: SHA-256
+`42d7868cb68264874a7b8cab4c3587b03b23ccc7cd72373da917f66758bb9736`
+(59,163,641 bytes) and
+`e4904ffa0afdce3f5836dceb927c440a05ed5d60386fdd37e17a4b2f7652edbf`
+(58,755,189 bytes). The bridge source hash during the evaluation was
+`982b9a25faf30b01faf48808264240b79e04c9c6f4e8d1041c9f60fb7b7f7b62`;
+runs store their own bridge hash. Mustang declares Apache-2.0, and the CLI offers
+`--action license` for its notices.
+
+The private ConnectingEurope CII example is 10,178 bytes, SHA-256
+`53a636ac10592aa6fdc280190a366955380a64883519a4d58926b96802eb7163`,
+from revision `b6c9e06a59812fb1a83585da40923b3678a649ad`. Its repository declares
+EUPL-1.2; individual invoice rights were not established, so the XML is excluded
+from Git. The owned XML and rendered image fixtures are authored functional
+examples, not customer or upstream ground truth.
+
+The OCR detector and recognizer are from PaddlePaddle Hugging Face repositories at
+the revisions in `configs/models.json`. Their model-card tags declare Apache-2.0.
+Model hashes are
+`a431985659dc921974177a95adcfbb90fd9e51989a5e04d70d0b75f597b6e61d`
+and `7888113072263cb471b93f66dd5e2ad70548dc526fa1ace760d0d973dd121498`.
+The derived `keys.txt` SHA-256 is
+`5ddc5c6086d61db3e1485f1237e059b89df9a228cebdac40a54406c6005bca67`.
+These files are ignored and independently downloadable; the model tags do not
+establish accuracy on SourceCheck invoices.

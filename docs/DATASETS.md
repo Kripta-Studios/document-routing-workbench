@@ -1,8 +1,8 @@
 # Data, tools and storage
 
-Inspection date: 2026-09-24. These measurements describe upstream files and existing
-local references, not a SourceCheck installation. No corpus or binary was acquired
-as part of the documentation update.
+Inspection date: 2026-09-24. The inventory sections below preserve the initial
+upstream estimates. The final section records the bounded SourceCheck acquisition
+and installed measurements from the implementation run.
 
 MB means 1,000,000 bytes; GiB means 1,073,741,824 bytes. Git tree totals are logical
 file sizes, excluding history, filesystem allocation and submodules. Release asset
@@ -116,8 +116,12 @@ estimated live API usage. Treat these as cumulative run budgets. Show remaining
 budget and stop before exceeding it. A larger budget must be explicitly configured.
 Existing valid cache files can be reused by hash.
 
-No acquisition commands are implemented yet. The proposed CLI in DEPLOYMENT.md must
-support a dry run, pinned manifests and byte accounting before being advertised.
+`python -m sourcecheck datasets prepare --manifest configs/sources.json --dry-run`
+prints the pinned download plan and remaining new bytes. The non-dry-run command
+verifies size and SHA-256, records transferred bytes, and stops at configured caps.
+`python -m sourcecheck models prepare` does the same for four pinned OCR files,
+generates and verifies the character dictionary, and never downloads at inference
+time.
 
 ## Reference cases we must author
 
@@ -162,6 +166,30 @@ Planning estimates, not installed measurements:
 
 Measure a fresh installation during implementation. Report transfer bytes, extracted
 assets, environments, images, volumes, caches and generated artifacts separately.
+
+## Acquired for this implementation
+
+Windows workspace, 2026-09-24. Two pinned Mustang CLI JARs transferred 117,918,830
+bytes in total. The private ConnectingEurope sample was fetched twice during
+development (20,356 transfer bytes total; one 10,178-byte copy is used by the app).
+Pinned OCR files were first verified from the inspected local cache with zero new
+transfer, then freshly downloaded into a separate ignored directory: 12,876,261
+bytes transferred and all model/dictionary hashes matched. These transfers are
+below the 1 GiB dataset and 4 GiB aggregate default caps. The four evaluated
+Mustang runs were made with actual JARs, not preauthored output.
+
+The working `.venv` contained 335,465,278 logical file bytes. The two JARs occupy
+117,918,830 bytes; the active OCR model directory contains 12,880,238 bytes
+including generated dictionary/manifest. One private upstream sample occupies
+10,178 bytes. The active SQLite database was 438,272 bytes at measurement time;
+other generated originals, destinations and exports vary by run. A separate fresh
+OCR download directory adds another approximately 12.9 MB during verification.
+These are file-byte sums, not allocated-disk measurements or a fresh-machine
+end-to-end installation total. Docker image/volume measurements are in RESULTS.md.
+
+No full ZUGFeRD corpus, large invoice XML, KoSIT validator, Odoo image or other ERP
+stack was needed for this local MVP run. The 150-family benchmark target is unmet;
+two source families were examined, and the owned variants share one family.
 
 ## Licenses
 

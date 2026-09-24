@@ -1,0 +1,8 @@
+{
+  "seed": 20260924,
+  "status": "development-only; prepared after implementation began, no held-out test claim",
+  "families": [
+    {"id":"owned-minimal-cii","source_sha256":"0ca42eb6eba41c8572035e09fe4d2bf07df9872c89b6db3c7f3f10516e40d365","split":"development","origin":"deterministic_constructed"},
+    {"id":"connecting-europe-business-02","source_sha256":"53a636ac10592aa6fdc280190a366955380a64883519a4d58926b96802eb7163","split":"development","origin":"upstream"}
+  ]
+}
