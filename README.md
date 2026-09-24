@@ -1,122 +1,97 @@
-# Document Routing Workbench
+# SourceCheck
 
-A planned browser application for preparing a reviewed document handover from a
-disorganized archive. A small technical consultancy can import project documents,
-preview their destination folders, resolve uncertain decisions in groups, compare
-routing-policy revisions and export a traceable delivery pack.
+A planned browser application for checking whether invoice ingestion preserves the
+information in the original document. Compare a PDF, image or electronic invoice
+with actual importer output, inspect discrepancies at their source, and repeat
+the check when an importer changes.
 
-**Status: implementation handoff, 2026-09-24.** This repository currently contains
-the specification and implementation plan. The application, dataset downloader and
-evaluation commands still need implementation. No classification results have been
-measured for this project.
+**Status: specification only, 2026-09-24.** No SourceCheck application, downloader,
+benchmark or deployment command has been implemented or executed here. Product value
+and Jev's contribution are hypotheses. [RESULTS.md](docs/RESULTS.md) records this status.
 
-## The user task
+The GitHub repository remains
+[Kripta-Studios/document-routing-workbench](https://github.com/Kripta-Studios/document-routing-workbench).
+SourceCheck is a provisional product name. This plan supersedes archive handover,
+country/type classification and the intermediate document-resubmission proposal.
+Git history preserves earlier plans; they are not additional release requirements.
 
-The first target user is the operations person in a small technical consultancy
-preparing an archive for a client or an internal project handover. They have mixed
-scans, PDFs and text files, an agreed destination structure, and responsibility for
-checking what the recipient will receive. The first version uses a local workspace.
-The user supplies project context; the app must not guess a client from weak clues.
+## Who it helps
 
-## Product distinction
+Start with small ERP integrators and developers maintaining invoice import pipelines.
+They need to check whether a connector update preserves references, dates, amounts,
+line descriptions and payment instructions. A successful import or valid XML alone
+does not demonstrate that every required item reached the intended destination.
 
-The product centers on a **reviewable handover plan**: source files, proposed output
-paths, unresolved decisions, policy changes and the exact contents of the delivery.
-OCR, classification, confidence scores and manual review already exist in competing
-products. Our proposed differentiation combines:
+Example, not an observed result: an invoice contains a purchase-order reference
+and a direct-debit instruction. The importer retains the total but omits those
+items. Show the source evidence, inspected destination fields and mapping profile.
 
-- A before/after folder preview and a diff between routing-policy revisions.
-- Group review with exact affected-document lists and reversible batch corrections.
-- A portable delivery pack with originals, hashes and a human-readable decision ledger.
+An export may hide information the ERP actually stores. Report **not observable in
+this export** unless the destination contract establishes absence.
 
-These features are release requirements. Their market value remains a hypothesis
-until users compare this workflow with their current tools. Read
-[PRODUCT.md](PRODUCT.md) for the competitor review, target scenario and validation gates.
+## Proposed workflow
 
-The first release must support this complete path:
+1. Upload an original and its actual importer output, or run the supported local adapter.
+2. Review the destination mapping and coverage profile.
+3. Inspect native text, XML facts and OCR regions alongside destination values.
+4. Review deterministic differences and optional Jev semantic suggestions.
+5. Save a reviewed reference case and compare a subsequent importer run.
+6. Export a reproducible discrepancy report with provenance and integrity checks.
 
-1. Create a batch and upload several supported files.
-2. Follow persistent processing progress, including individual failures.
-3. Open a document beside its extracted text and selectable OCR boxes.
-4. Inspect Jev's proposed type, change it if needed, and confirm a destination queue.
-5. Return after a browser or server restart and find the same decisions.
-6. Compare destination plans, resolve collisions and export a verified handover pack.
+The first local release closes this loop using Mustang as a real importer and an
+uploaded JSON destination format, with an explicit CSV mapping path. Odoo integration
+is a later milestone. Testing Mustang does not establish behavior in an ERP database.
+
+## Proposed distinction
+
+Combine invoice-specific source-to-destination checks, visual evidence, semantic
+comparison of text and reusable regression cases. Validators, ETL testing tools and
+trace-it overlap with parts of this workflow. We have not established exclusivity,
+market demand, lower costs or superior accuracy. Read [PRODUCT.md](PRODUCT.md) and
+[RESEARCH.md](docs/RESEARCH.md).
 
 ## Jev's role
 
-The local OCR reads pixels. Jev receives extracted or supplied text and proposes a
-document type from a versioned taxonomy. Application rules map confirmed types to
-destination queues. Users review suggestions before routing in the initial release.
-Unknown content and processing failures have separate states.
+Local parsers and OCR read the source. Code checks identifiers, amounts, dates,
+coverage and configured mappings. Jev may compare bounded source/destination text
+and suggest equivalent, contradictory, partially preserved or insufficient evidence.
+A person reviews semantic findings.
 
-The product must retain the evidence needed to judge whether Jev helps. Compare it
-against a rules baseline and a small conventional text classifier. Report mistakes,
-abstentions, latency, costs and the corrections made during review. A model
-probability is not measured accuracy.
-
-## Initial classification scope
-
-Use the 16 RVL-CDIP classes plus `UNKNOWN`: letter, form, email, handwritten,
-advertisement, scientific report, scientific publication, specification, file
-folder, news article, budget, invoice, presentation, questionnaire, resume and memo.
-See [the exact identifiers and category contract](PLAN.md#taxonomy-and-routing).
-
-Some categories depend on layout or handwriting that a text-only classifier cannot
-observe. Keep these cases in the evaluation, measure per-class failures and permit
-abstention. The first release does not promise receipt extraction, expense policy
-decisions or category coverage beyond this taxonomy.
-
-## Reuse the existing work
-
-| Source | Reuse |
-|---|---|
-| [Jev receipt country classifier](https://github.com/Kripta-Studios/jev-receipt-country-classifier) | Jev HTTP client, OCR adapter, document viewer behavior, metrics and evaluation practices |
-| [trace-it](https://github.com/Martinhdeez/trace-it) | Local OCR implementation, pinned model setup and dependency definitions |
-
-Start from receipt-project commit
-`f5ca51cebed1a2819a5f571e1058bf3708cf2144` and trace-it commit
-`84c4c0463862640940efb1232344287a2d03bcf5`. The [reuse inventory](PLAN.md#reuse-inventory)
-identifies files and the changes they need.
-
-On the original development machine:
-
-```text
-~/Desktop/KriptaStudios/document-routing-workbench
-~/Desktop/KriptaStudios/Jev_Ticketing_Classfication
-~/Desktop/KriptaStudios/Reto_Maisa/trace-pay-main
-```
-
-The receipt project also contains the pinned source under `external/trace-it`.
-Treat the older standalone trace-it checkout as a reference whose revision must be
-checked. Keep both source repositories and their published evaluation artifacts intact.
-The finished application must work on a fresh machine without those sibling paths.
-
-## Dataset plan
-
-[RVL-CDIP](https://adamharley.com/rvl-cdip/) contains 400,000 grayscale document
-images across 16 classes. Its official archive is 38,762,320,458 bytes. Begin with
-a reproducible 1,600-document sample, 100 per class, preserving the upstream splits.
-Record source revisions, sample identifiers and hashes. Sampling and storage limits
-are specified in [PLAN.md](PLAN.md#data-and-evaluation).
-
-Dataset availability does not establish redistribution permission. Check the original
-dataset terms before publishing images. Store downloaded data outside Git and bundle
-only owned fixtures or examples with verified redistribution permission.
-
-RVL-CDIP measures document classification. It does not establish business usefulness,
-staff time saved, real duplicate prevalence or performance on modern expense receipts.
+Jev does not calculate totals, certify compliance, recover invisible data, generate
+source coordinates or authorize payments. Live use sends selected text to TypeSafe.
+Local OCR does not make the entire pipeline local. The app must work without live Jev.
 
 ## Implementation handoff
 
-Open this folder in a new Codex session and ask the agent to implement
-[PLAN.md](PLAN.md). Read [AGENTS.md](AGENTS.md) and [PRODUCT.md](PRODUCT.md) first. The plan defines architecture,
-milestones, verification, an evaluation protocol and completion criteria.
-Use [NEXT_AGENT_PROMPT.md](NEXT_AGENT_PROMPT.md) for the complete implementation prompt.
+| Document | Purpose |
+|---|---|
+| [PRODUCT.md](PRODUCT.md) | User task, competition, scope and pilot gates |
+| [PLAN.md](PLAN.md) | Contracts, architecture, phases and acceptance |
+| [DATASETS.md](docs/DATASETS.md) | Sources, revisions, sizes and acquisition |
+| [EVALUATION.md](docs/EVALUATION.md) | References, splits, baselines and metrics |
+| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Target commands and installation verification |
+| [PROVENANCE.md](docs/PROVENANCE.md) | Reuse inventory and licenses |
+| [RESULTS.md](docs/RESULTS.md) | Collected evidence and missing measurements |
+| [NEXT_AGENT_PROMPT.md](NEXT_AGENT_PROMPT.md) | Prompt for the implementation session |
 
-All source code, UI copy, documentation, tests and committed reports must use English.
-Real user documents may retain their original language.
+All code, UI, documentation and reports use English. Preserve source documents in
+their original language. Agent instructions are in [AGENTS.md](AGENTS.md).
 
-At handoff, Git commands are the only setup commands that exist:
+## Reuse and storage
+
+Reuse the receipt-project Jev client, OCR adapter, viewer and measurement practices,
+plus pinned trace-it OCR source. Preserve both reference repositories. Record every
+adapted component and resolve relevant license questions.
+
+The investigated initial bundle is approximately **370 MB** of source files, published
+tools and existing OCR assets before runtimes, Git history and generated artifacts.
+Allow **5 GB free** for the local MVP; allow **10â€“15 GB** with the later Odoo environment
+when Docker is already installed. These are planning allowances, not measured
+SourceCheck installation sizes. See [storage accounting](docs/DATASETS.md#storage-accounting).
+
+## What can run today
+
+Only repository/documentation operations exist:
 
 ```powershell
 git clone https://github.com/Kripta-Studios/document-routing-workbench.git
@@ -124,26 +99,17 @@ cd document-routing-workbench
 git status
 ```
 
-The implementation agent must replace this status section with tested installation,
-execution and deployment instructions for Windows PowerShell and Linux/macOS.
-Keep offline demonstration, live inference and benchmark reproduction separate.
+The private repository requires authorized GitHub access. SSH is an alternative when
+configured. The future web URL is `http://127.0.0.1:8770/`; this documentation update
+does not start a server.
 
-## Credentials and data
+The implementer must supply tested fresh-machine setup, sample acquisition, offline
+demo, live Jev, evaluation and export-verification commands.
+[DEPLOYMENT.md](docs/DEPLOYMENT.md) labels all proposed commands as unavailable today.
 
-Supply `TYPESAFE_API_KEY` through the server environment when live inference is ready.
-The environment may also need an authenticated Hugging Face session for dataset access.
-Do not commit credentials or copy tokens from the previous conversation into files.
-OCR runs locally; live Jev classification sends document text to TypeSafe.
+## Credentials and files
 
-The initial deployment binds to localhost. Shared hosted access requires a later
-authentication and access-control design. The implementation plan defines local
-storage, export, deletion and request boundaries.
-
-## Sources
-
-- [Receipt-project architecture and limitations](https://github.com/Kripta-Studios/jev-receipt-country-classifier/blob/f5ca51cebed1a2819a5f571e1058bf3708cf2144/docs/ARCHITECTURE.md)
-- [Receipt-project OCR provenance](https://github.com/Kripta-Studios/jev-receipt-country-classifier/blob/f5ca51cebed1a2819a5f571e1058bf3708cf2144/docs/OCR.md)
-- [Receipt-project deployment guide](https://github.com/Kripta-Studios/jev-receipt-country-classifier/blob/f5ca51cebed1a2819a5f571e1058bf3708cf2144/docs/DEPLOYMENT.md)
-- [RVL-CDIP authors and download information](https://adamharley.com/rvl-cdip/)
-- [RVL-CDIP on Hugging Face, linked by its authors](https://huggingface.co/datasets/aharley/rvl_cdip)
-- [TypeSafe documentation](https://docs.typesafe.ai/)
+Use server-side `TYPESAFE_API_KEY` from the environment or an ignored configuration
+file. Never copy credentials from conversation history. Keep originals, OCR text,
+provider responses, databases, models and downloaded corpora outside Git. Commit
+only reviewed, permitted fixtures and sanitized reports.

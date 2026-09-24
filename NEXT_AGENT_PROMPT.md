@@ -1,39 +1,43 @@
 # Prompt for the implementation session
 
-Copy the text below into a new Codex session opened in this repository.
+Open this repository in a new Codex session and provide this prompt:
 
 ```text
-Implement this repository through the local-pilot release defined in AGENTS.md,
-README.md, PRODUCT.md and PLAN.md. Read those files first and inspect the pinned
-reference repositories before writing replacement components.
+Implement SourceCheck through the local MVP. Read AGENTS.md, README.md, PRODUCT.md,
+PLAN.md and every linked docs file. The archive-routing, RVL-CDIP and resubmission
+plans are superseded.
 
-Build the archive handover workflow for small technical consultancies: folder/batch
-import, local OCR, Jev document-type suggestions, persistent review, grouped corrections
-with undo, versioned routing-plan preview/diff, and verified exports with a portable
-HTML decision ledger. The plan/diff, group review and delivery artifact are required;
-a generic classifier or prompt-comparison dashboard does not complete this task.
+Build a persistent local browser app comparing original invoices with actual
+importer output, showing source evidence and destination paths, recording human
+dispositions, rerunning reviewed cases across importer versions and exporting
+verifiable reports. Use port 8770 and the sourcecheck Python namespace.
 
-Reuse the Jev client, OCR adapter, viewer behavior and evaluation practices from
-../Jev_Ticketing_Classfication at the revision in PLAN.md. Use the pinned trace-it
-source as specified there. Preserve both source repositories and their results.
-Record provenance, adapt country-specific contracts, and make fresh installation
-independent of sibling paths.
+Start with a genuine pinned Mustang adapter and uploaded JSON/CSV under explicit
+mapping/coverage contracts. Keep source references independent of the importer under
+test. Distinguish absence, unobserved fields, source uncertainty, semantic suggestions,
+format validation and execution errors. Odoo is a separate later milestone.
 
-Keep code, UI, comments, documentation and reports in English. Make routine technical
-decisions and continue through implementation, meaningful tests, browser verification
-and deployment documentation. Keep the phase checklist current. Use port 8770.
+Inspect and reuse the pinned receipt-project Jev client, OCR adapter, viewer and
+measurement practices plus trace-it OCR as specified in docs/PROVENANCE.md. Preserve
+sibling repositories and their results. Support fresh installation without them.
 
-Prepare the bounded RVL-CDIP sample with the frozen split protocol in PLAN.md; compare
-Jev with the rules and conventional text baselines. Respect download and API budgets.
-Keep the benchmark, authored handover scenario and future user-pilot evidence separate.
-Use genuine inference for live claims. Do not invent results, time savings, market
-uniqueness or confidence guarantees. Use credentials only from authorized environment
-or authenticated tools. If access is missing, ask for the missing input and continue
-independent implementation; identify the unverified checks in the final report.
+Use English for code, UI and docs. Acquire bounded sources and record hashes, bytes,
+revisions and licenses before evaluation. Create independent reviewed references
+and family-level splits. Separate authored mutations, actual importer runs and
+customer pilots. Use code for exact facts and Jev for bounded text comparisons.
+Compare with rules and report whether Jev adds value.
 
-Exercise the complete workflow in the browser at the specified widths and zoom levels,
-including restart recovery, policy diffs, undo conflicts and export verification.
-Document tested Windows and Linux/macOS commands, live/offline modes and Docker setup.
-Review the final changes, commit and push to the configured origin without force-pushing.
-Finish with the commit, local URL, verification evidence, measured results and limitations.
+Respect download/API budgets. Use authorized environment credentials only. If live
+access is missing, finish independent offline functionality and explicitly report
+unverified checks. Never invent metrics, human annotations or superiority claims.
+
+Complete meaningful tests and real browser interactions at required widths/zoom:
+coverage warnings, evidence selection, recovery, review preservation, rerun diffs,
+errors, deletion and export verification. Supply tested PowerShell and Linux/macOS
+commands and distinguish recorded demo from fresh inference. Update checklists and
+docs/RESULTS.md with actual evidence.
+
+Review, commit and push to the configured origin without force-pushing. Finish with
+the commit, local URL, commands tested, measured results, Jev's observed contribution,
+limits and the status of the optional ERP pilot.
 ```
